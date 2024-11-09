@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import ru.ushakov.billing.domain.Account
-import ru.ushakov.billing.domain.NotificationMethod
 import ru.ushakov.billing.service.AccountService
 import java.math.BigDecimal
 
@@ -22,8 +21,7 @@ class AccountController(private val accountService: AccountService) {
             firstName = request.firstName,
             lastName = request.lastName,
             email = request.email,
-            phoneNumber = request.phoneNumber,
-            preferredNotificationMethod = request.preferredNotificationMethod
+            phoneNumber = request.phoneNumber
         )
         return ResponseEntity.status(HttpStatus.CREATED).body(account)
     }
@@ -54,6 +52,5 @@ data class CreateUserAccountRequest(
     val firstName: String,
     val lastName: String,
     val email: String,
-    val phoneNumber: String,
-    val preferredNotificationMethod: NotificationMethod
+    val phoneNumber: String
 )

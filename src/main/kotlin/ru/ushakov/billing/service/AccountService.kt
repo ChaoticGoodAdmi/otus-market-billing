@@ -3,7 +3,6 @@ package ru.ushakov.billing.service
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.ushakov.billing.domain.Account
-import ru.ushakov.billing.domain.NotificationMethod
 import ru.ushakov.billing.domain.TransactionType
 import ru.ushakov.billing.domain.User
 import ru.ushakov.billing.repository.AccountRepository
@@ -23,16 +22,14 @@ class AccountService(
         firstName: String,
         lastName: String,
         email: String,
-        phoneNumber: String,
-        preferredNotificationMethod: NotificationMethod
+        phoneNumber: String
     ): Account {
         val user = User(
             username = username,
             firstName = firstName,
             lastName = lastName,
             email = email,
-            phoneNumber = phoneNumber,
-            preferredNotificationMethod = preferredNotificationMethod
+            phoneNumber = phoneNumber
         )
 
         val savedUser = userRepository.save(user)
@@ -63,7 +60,14 @@ class AccountService(
             ?: throw IllegalArgumentException("Account not found")
 
         require(amount > BigDecimal.ZERO) { "Withdrawal amount must be greater than zero" }
-        require(account.balance >= amount) { "Insufficient funds" }
+        if (account.balance < amount) {
+            billingEventProducer.sendBillingEvent(
+                account,
+                TransactionType.INSUFFICIENT_FUNDS,
+                amount
+            )
+            throw IllegalArgumentException("Insufficient funds")
+        }
 
         account.balance = account.balance.subtract(amount)
         accountRepository.save(account)

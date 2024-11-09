@@ -21,7 +21,7 @@ data class Account(
     var balance: BigDecimal = BigDecimal.ZERO
 ) {
     constructor(user: User) : this(0, generateRandomAccountNumber(), user)
-    constructor() : this(0, "", User(0, "", "", "", "", "", NotificationMethod.EMAIL), BigDecimal.ZERO) {
+    constructor() : this(0, "", User(0, "", "", "", "", ""), BigDecimal.ZERO) {
 
     }
 
@@ -33,5 +33,5 @@ data class Account(
 }
 
 enum class TransactionType {
-    DEPOSIT, WITHDRAW
+    DEPOSIT, WITHDRAW, INSUFFICIENT_FUNDS
 }

@@ -22,16 +22,8 @@ data class User(
     val email: String,
 
     @Column(nullable = false)
-    val phoneNumber: String,
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    val preferredNotificationMethod: NotificationMethod
+    val phoneNumber: String
 
 ) {
-    constructor() : this(0, "", "", "", "", "", NotificationMethod.EMAIL)
-}
-
-enum class NotificationMethod {
-    EMAIL, SMS, PUSH
+    constructor() : this(0, "", "", "", "", "")
 }
